@@ -1,9 +1,9 @@
 # Week 0 — Billing and Architecture
 ## Architecture Diagrams:
 - Conceptual Diagram:
-![Conceptual Diagram](https://lucid.app/publicSegments/view/00af4cdc-390f-4e7c-86ee-1935e0e82145/image.png)
+![Conceptual Diagram](_docs/assets/conceptual_diagram_lq.png)
 - Logical Diagram:
-
+![Logical Diagram](_docs/assets/logical_diagram_lq.png)
 ## Checklist
 - [x] Watched Week 0 - Live Streamed Video	https://www.youtube.com/watch?v=SG8blanhAOg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=12
 - [x] Watched Chirag's Week 0 - Spend Considerations	https://www.youtube.com/watch?v=OVw3RrlP-sI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=13
