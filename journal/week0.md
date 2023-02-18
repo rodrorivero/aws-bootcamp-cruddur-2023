@@ -2,6 +2,7 @@
 ## Architecture Diagrams:
 - Conceptual Diagram:
 ![Conceptual Diagram](_docs/assets/conceptual_diagram_lq.png)
+![Cruddur Graphic](_docs/assets/cruddur-banner.jpg)
 - Logical Diagram:
 ![Logical Diagram](_docs/assets/logical_diagram_lq.png)
 ## Checklist
