@@ -1,5 +1,6 @@
 # Week 0 — Billing and Architecture
 ## Architecture Diagrams:
+
 - Conceptual Diagram:
 
 ![Conceptual Diagram](../_docs/assets/conceptual_diagram_lq.png)
