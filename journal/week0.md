@@ -1,7 +1,7 @@
 # Week 0 — Billing and Architecture
 ## Architecture Diagrams:
 - Conceptual Diagram:
-![This is an image](https://lucid.app/publicSegments/view/00af4cdc-390f-4e7c-86ee-1935e0e82145/image.png)
+![Conceptual Diagram](https://lucid.app/publicSegments/view/00af4cdc-390f-4e7c-86ee-1935e0e82145/image.png)
 - Logical Diagram:
 
 ## Checklist
