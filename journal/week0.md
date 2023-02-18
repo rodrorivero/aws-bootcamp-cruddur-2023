@@ -1,10 +1,13 @@
 # Week 0 — Billing and Architecture
 ## Architecture Diagrams:
 - Conceptual Diagram:
-![Conceptual Diagram](_docs/assets/conceptual_diagram_lq.png)
-![Cruddur Graphic](_docs/assets/cruddur-banner.jpg)
+
+![Conceptual Diagram](../_docs/assets/conceptual_diagram_lq.png)
+
 - Logical Diagram:
-![Logical Diagram](_docs/assets/logical_diagram_lq.png)
+
+![Logical Diagram](../_docs/assets/logical_diagram_lq.png)
+
 ## Checklist
 - [x] Watched Week 0 - Live Streamed Video	https://www.youtube.com/watch?v=SG8blanhAOg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=12
 - [x] Watched Chirag's Week 0 - Spend Considerations	https://www.youtube.com/watch?v=OVw3RrlP-sI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=13
