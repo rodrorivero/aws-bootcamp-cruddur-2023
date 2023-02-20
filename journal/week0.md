@@ -10,10 +10,12 @@ For our project, a social network with a similar concept than Twitter, we will b
 > Conceptual Diagram: Represents a virtual napkin in which the architecture was originally planned:
 
 ![Conceptual Diagram](../_docs/assets/conceptual_diagram_lq.png)
+[Link to Lucidchart](https://lucid.app/lucidchart/8ab7b0e9-dc68-44a1-8411-61ff335cefcd/edit?viewport_loc=1197%2C326%2C2501%2C1180%2C0_0&invitationId=inv_d5f80eb6-d1d6-4b37-99b0-d9b0189f442c)
 
 > Logical Diagram: Stating the technical details of the proposed landscape:
 
 ![Logical Diagram](../_docs/assets/logical_diagram_lq.png)
+[Link to Lucidchart](https://lucid.app/lucidchart/9d023106-8c25-44b9-aea3-fe76d93b4a6b/edit?viewport_loc=-110%2C139%2C1844%2C870%2C0_0&invitationId=inv_6eeedffd-ff47-4074-bbcb-03c631896d20)
 
 ### Create Admin user, generate AWS credentials & enable MFA:
 
@@ -36,12 +38,12 @@ For ease of access and better control of the IDE, I followed the instructions on
 > VSCode: Screenshot showing the required extensions to enable the integration:
 
 ![VSCodeExt](../_docs/assets/img/week0/VSCodeextensions.png)
-[Link to Lucidchart](https://lucid.app/lucidchart/8ab7b0e9-dc68-44a1-8411-61ff335cefcd/edit?viewport_loc=1197%2C326%2C2501%2C1180%2C0_0&invitationId=inv_d5f80eb6-d1d6-4b37-99b0-d9b0189f442c)
+
 
 > VSCode: Screenshot showing the successfully retrieval of the repository and gitpod terminal enabled:
 
 ![VSCodegitpod](../_docs/assets/img/week0/VSCodegitpod.png)
-[Link to Lucidchart](https://lucid.app/lucidchart/9d023106-8c25-44b9-aea3-fe76d93b4a6b/edit?viewport_loc=-110%2C139%2C1844%2C870%2C0_0&invitationId=inv_6eeedffd-ff47-4074-bbcb-03c631896d20)
+
 
 ### AWS CLI installation:
 
