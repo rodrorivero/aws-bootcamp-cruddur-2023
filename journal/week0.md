@@ -51,7 +51,7 @@ To install the AWS CLI on Linux, we need to make sure to download the required d
 
 > AWS CLI installation - Code used for linux x86 systems:
 
-```
+```bash
 $ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -78,7 +78,7 @@ A Budget and Billing Alarm in AWS helps you monitor and manage your AWS costs an
 Using JSON files and AWS CLI I created a budget in AWS with alerts to inform me when the threshold is at 85% and 100% fullfiled:
 
 Example json code:
-```
+```JSON
 
     "BudgetLimit": {
         "Amount": "10",
