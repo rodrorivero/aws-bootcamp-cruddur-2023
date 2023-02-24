@@ -13,11 +13,13 @@
 ## Required Homeworks/Taks                                                                                                                
 ### Installed VSCode Docker extension:
 
+To install the Docker extension in VSCode, search for "Docker" in the extensions sidebar, click "Install," and then click "Reload" after installation.
+
 ![image](https://user-images.githubusercontent.com/85003009/221087227-f48ecab6-3183-49ce-a7d3-616157f1e013.png)
 
 ### Built container and contenerized Front End and Back End:
 
-
+We used Docker to containerize our website, made with Flask framework, for that we have separated Dockerfiles for frontend and backend, first we built the Docker images using docker build, and then ran the containers using docker run. 
 
 Dockerfile code Front End:
 
@@ -42,6 +44,9 @@ ENV FLASK_ENV=development
 EXPOSE ${PORT}
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 ```
+
+Docker Compose was used for defining our multi container application in a docker-compose.yml file and start both images with a single command using docker-compose up. At the end we ensure that the back end and front end containers can communicate with each other testing using port mapping to expose both.
+
 Docker composer file:
 
 ```yml
@@ -71,12 +76,12 @@ networks:
     name: cruddur
 ```
 
-Docker compose
+> Docker compose
 
 ![image](https://user-images.githubusercontent.com/85003009/221087549-f16b9664-2eff-4425-80bb-4a8c7d4b8d39.png)
 
 
-Check ports an make sure to unlock them in order to enable external access:
+> Check ports an make sure to unlock them in order to enable external access:
 
 ![image](https://user-images.githubusercontent.com/85003009/221087700-02098d94-3c56-4bd2-bff1-26f6aa9df98b.png)
 
@@ -85,6 +90,8 @@ Check ports an make sure to unlock them in order to enable external access:
 
 ![image](https://user-images.githubusercontent.com/85003009/221087787-53e59824-9ef9-4b0f-81b5-f426d67eb855.png)
 
+
+When using Git it's important to commit all the changes and write a message in order to maintain consistency in the repository. 
 
 > Commit changes:
 
