@@ -76,12 +76,12 @@ networks:
     name: cruddur
 ```
 
-> Docker compose
+> Docker compose execution:
 
 ![image](https://user-images.githubusercontent.com/85003009/221087549-f16b9664-2eff-4425-80bb-4a8c7d4b8d39.png)
 
 
-> Check ports an make sure to unlock them in order to enable external access:
+> Check the exposed ports an make sure to unlock them in order to enable external access:
 
 ![image](https://user-images.githubusercontent.com/85003009/221087700-02098d94-3c56-4bd2-bff1-26f6aa9df98b.png)
 
