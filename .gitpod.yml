@@ -1,19 +1,19 @@
 tasks:
-- name: aws-cli
-  before: echo "installing AWS CLI"
-  env:
-      AWS_CLI_AUTO_PROMPT: on-partial
-  init: |
-    sudo ./aws/install
 - name: postgres
   command: |
     cd $THEIA_WORKSPACE_ROOT
   init: |
-      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
-      sudo apt update
-      sudo apt install -y postgresql-client-13 libpq-dev
-
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+    sudo apt update
+    sudo apt install -y postgresql-client-13 libpq-dev
+- name: aws-cli
+  before: echo "installing AWS CLI"
+  env:
+   AWS_CLI_AUTO_PROMPT: on-partial
+  init: |
+    sudo ./aws/install
 vscode:
   extensions:
-    - 42crunch.vscode-openapi
+   - 42crunch.vscode-openapi
+    
