@@ -1,7 +1,6 @@
 tasks:
-  - init: cd /workspace
-  - init: echo "hello world"
-  - init: sudo ./aws/install
+- name: CMD
+- name: CMD2
 # List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
 ports:
   - name: Frontend
