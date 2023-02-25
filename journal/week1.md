@@ -272,7 +272,7 @@ Testing the notifications page :
 
 ##Dynamo DB:
 
-Edited docker-compose file
+Edited docker-compose file to include the provisioning of dynamo db on a local container, defined the communication port and attached a volume to persist the data.
 
 ```yml
 dynamodb-local:
@@ -296,9 +296,9 @@ Testing the connection to local database:
 
 ![image](https://user-images.githubusercontent.com/85003009/221330291-78936d36-5c0c-4833-a5f6-7a0f16aed06a.png)
 
-##Dynamo DB:
+##Postgres:
 
-Edited docker-compose file
+Edited docker-compose file for provisioning postgress on local container, defined the communication port and attached a volume to persist the data.
 
 ```yml
   db:
@@ -329,11 +329,25 @@ Test the connection to postgres database:
 ![image](https://user-images.githubusercontent.com/85003009/221341946-9b12e2bc-1a8b-4ba0-859a-b504d06363f8.png)
 
 
+### Troubleshooting problems with tasks on VSCode desktop.
+
+Realized that the configured  tasks weren't executing automatically (postgress driver and AWS CLI installation), instead there was only a dummy task called:  
+
+For troubleshooting performed the following tasks:
+- Verified the code on .gitpod.yaml was written correctly
+- Reset the configuration with "gp tasks init"
+- Checked logs and looked for documentation online
+- Rebuilt workspace with issues using "gp rebuild", after rebuilding on scenario: isssue is gone so proceed to restart the environment and issue came back.
+- Opnened few new workspaces and on the first run issue is not present, but a new issue arises everytime a workspace is executed for the second time. Tasks are not executed automatically and a new error message shows a preconfigured History environmental variables.
+- Created a bug ticket for GitPod team to check on it: "Problem with automatic tasks on .gitpod.yml #16572". 
+- Workaround I execute is to create a new workspace eveytime and added: "npm install" on frontend route in .gitpod.yaml file to avoid manual executions.
+
+
 ## Summary
 - [x] Watched all the instructional videos
 - [x] Installed VSCode Docker extension
 - [x] Built container and contenerized Front End and Back End
 - [x] Create the notification feature
 - [x] Run DynamoDB and Postgress local Containers
+- [x] Troubleshooting problems with automatic tasks 
 
-[Link to Lucidchart](https://lucid.app/lucidchart/8ab7b0e9-dc68-44a1-8411-61ff335cefcd/edit?viewport_loc=1197%2C326%2C2501%2C1180%2C0_0&invitationId=inv_d5f80eb6-d1d6-4b37-99b0-d9b0189f442c)
