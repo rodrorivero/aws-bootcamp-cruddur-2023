@@ -1,15 +1,16 @@
-# List the start up tasks. Learn more: https://www.gitpod.io/docs/configure/workspaces/tasks
 tasks:
-  - name: aws-cli
-    before: echo "Installing AWS CLI"
-    init: sudo ./aws/install # runs during prebuild => https://www.gitpod.io/docs/configure/projects/prebuilds
+  - name: awscli
     command: cd /workspace
 
 # List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
 ports:
   - name: Frontend
     description: Port 3000 for the frontend
-    port: 3009
+    port: 4009
     onOpen: open-preview
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
+
+vscode:
+  extensions:
+    - 42crunch.vscode-openapi
