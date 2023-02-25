@@ -21,12 +21,12 @@ vscode:
 ports:
   - port: 3000
     onOpen: open-browser
-    name: DynamoDB
-    description: Database DynamoDB
+    name:  FrontEnd
+    description: FrontEnd Flask site
   - port: 8000
     onOpen: open-browser
-    name: FrontEnd
-    description: FrontEnd Flask site
+    name: DynamoDB
+    description: Database DynamoDB 
   - port: 4567
     onOpen: open-browser
     name: BackEnd
