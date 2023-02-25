@@ -97,8 +97,6 @@ When using Git it's important to commit all the changes and write a message in o
 
 ![image](https://user-images.githubusercontent.com/85003009/221085828-aff4e626-6d97-4dae-8e47-21a90010979d.png)
 
-[Link to Lucidchart](https://lucid.app/lucidchart/8ab7b0e9-dc68-44a1-8411-61ff335cefcd/edit?viewport_loc=1197%2C326%2C2501%2C1180%2C0_0&invitationId=inv_d5f80eb6-d1d6-4b37-99b0-d9b0189f442c)
-
 ### Create Notification Feature:
 
 ##On the Backend:
@@ -270,10 +268,72 @@ Testing the notifications page :
 
 ![image](https://user-images.githubusercontent.com/85003009/221100384-1dbc56f9-064e-4c1a-b579-fe0da9312746.png)
 
+### Run DynamoDB and Postgress local Containers
+
+##Dynamo DB:
+
+Edited docker-compose file
+
+```yml
+dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+```
+> Make sure 8000 port is set to public:
+
+![image](https://user-images.githubusercontent.com/85003009/221329655-8b8b526c-58ca-4ce9-8b52-070e5680a953.png)
+
+Testing the connection to local database:
+
+![image](https://user-images.githubusercontent.com/85003009/221330291-78936d36-5c0c-4833-a5f6-7a0f16aed06a.png)
+
+##Dynamo DB:
+
+Edited docker-compose file
+
+```yml
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data  
+```
+
+Added the installation of driver for postgres on .gitpod.yml file in order to install everytime the environment is provisioned:
+
+```yml
+  - name: postgres
+    init: |
+      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      sudo apt update
+      sudo apt install -y postgresql-client-13 libpq-dev
+```
+
+Test the connection to postgres database:
+
+![image](https://user-images.githubusercontent.com/85003009/221341946-9b12e2bc-1a8b-4ba0-859a-b504d06363f8.png)
+
 
 ## Summary
 - [x] Watched all the instructional videos
 - [x] Installed VSCode Docker extension
 - [x] Built container and contenerized Front End and Back End
 - [x] Create the notification feature
-- [x] Create a Billing Alarm and a budget
+- [x] Run DynamoDB and Postgress local Containers
+
+[Link to Lucidchart](https://lucid.app/lucidchart/8ab7b0e9-dc68-44a1-8411-61ff335cefcd/edit?viewport_loc=1197%2C326%2C2501%2C1180%2C0_0&invitationId=inv_d5f80eb6-d1d6-4b37-99b0-d9b0189f442c)
