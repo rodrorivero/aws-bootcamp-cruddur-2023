@@ -22,17 +22,21 @@ ports:
   - port: 3000
     onOpen: open-browser
     name:  FrontEnd
+    visibility: public
     description: FrontEnd Flask site
   - port: 8000
     onOpen: open-browser
     name: DynamoDB
+    visibility: public
     description: Database DynamoDB 
   - port: 4567
     onOpen: open-browser
     name: BackEnd
+    visibility: public
     description: BackEnd Flask site
   - port: 5432
     onOpen: open-browser
     name: Postgres
+    visibility: public
     description: Database Postgress 
     
