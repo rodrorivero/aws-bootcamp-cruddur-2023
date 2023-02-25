@@ -1,7 +1,10 @@
 tasks:
   - name: awscli
-    command: cd /workspace
-
+    init: cd /workspace
+  - name: task24
+    init: echo "hello world"
+  - name: task24
+    init: sudo ./aws/install
 # List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
 ports:
   - name: Frontend
