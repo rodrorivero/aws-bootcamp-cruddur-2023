@@ -1,4 +1,8 @@
 tasks:
+- name: npmbackend 
+  init: |
+    cd frontend-react-js/
+    npm install
 - name: postgres 
   init: |
     cd $THEIA_WORKSPACE_ROOT
