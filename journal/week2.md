@@ -249,16 +249,16 @@ def data_home():
 
 ## 4) Rollbar
 
-#### 3.1) Add the rollbar sources for provitioning it with python on our backend-flask/requirements.txt file:
+#### 4.1) Add the rollbar sources for provitioning it with python on our backend-flask/requirements.txt file:
 ```txt
 blinker
 rollbar
 ```
-#### 3.2) Install rollbar using pip:
+#### 4.2) Install rollbar using pip:
 ```txt
 pip install -r requirements.txt
 ```
-#### 3.3) Configuring error logging Rollbar on Flask backend (app.py)
+#### 4.3) Configuring error logging Rollbar on Flask backend (app.py)
 
 ```py
 #Rollbar--------------
@@ -292,7 +292,7 @@ def rollbar_test():
     rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
 ```
-#### 3.3) Observe how Rollbar handle error trigering:
+#### 4.4) Observe how Rollbar handle error trigering:
 
 on home_activites.py we removed a part of the code to see how are errors logged on Rollbar:
 
