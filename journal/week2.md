@@ -62,7 +62,7 @@ OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
 ```
 #### 1.5) Export and persist the environmental variables of your honeycomb account:
 
-HONEYCOMB
+![image](https://user-images.githubusercontent.com/85003009/222992136-cc84c9b7-0fe8-4656-8168-fbfd07ae7433.png)
 
 #### 1.6) Run queries to explore traces
 
