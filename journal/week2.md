@@ -193,6 +193,59 @@ subsegment = xray_recorder.begin_segment('mockdata')
 ![image](https://user-images.githubusercontent.com/85003009/222981149-ab00c22c-05c0-4ed1-9296-000399a818ba.png)
 
 
+## 3) CloudWatch Logs
+
+#### 3.1) Add the watchtower sources for provitioning it with python on our backend-flask/requirements.txt file:
+```txt
+watchtower
+```
+#### 3.2) Install the watchtower using pip:
+```txt
+pip install -r requirements.txt
+```
+#### 3.3) Configuring Logger to Use CloudWatch on Flask backend (app.py)
+
+```py
+#CloudWatch--------------
+# Importing CloudWatch logs libraries
+import watchtower
+import logging
+from time import strftime
+
+#CloudWatch--------------
+# Configuring Logger to Use CloudWatch
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+LOGGER.addHandler(console_handler)
+LOGGER.addHandler(cw_handler)
+```
+#### 3.4) Add environmental variables to docker-compose.yml
+```yml
+AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+```
+#### 3.5) Add the calling to logger function from service page:
+
+on home_activities.py:
+```py
+import logging
+..
+class HomeActivities:
+  def run(logger):
+  logger.info("HomeActivities")
+```
+on app.py:
+```py
+@xray_recorder.capture('activites_home')
+def data_home():
+  data = HomeActivities.run(logger=LOGGER)
+```
+#### 2.9) Observe the CloudWatch Logs within the AWS Console
+![image](https://user-images.githubusercontent.com/85003009/222983372-0f38b1c9-239d-4757-ab80-8f53873ba036.png)
+
 
 Integrate Rollbar for Error Logging
 Trigger an error an observe an error with Rollbar
