@@ -10,3 +10,204 @@
                                                                                                                                   
 ```  
 # Week 2 — Distributed Tracing
+
+## 1) Honeycomb
+
+To implement Honeycomb using OpenTelemetry in our Flask back end, we will use OpenTelemetry SDK for Python along with the OpenTelemetry Honeycomb exporter based on the information provided on [Honeycomb.io web site](https://docs.honeycomb.io/getting-data-in/opentelemetry/python/) . Here are the steps performed:
+
+#### 1.1) Add the OTEL (Open Telemetry) sources for provitioning it with python on our backend-flask/requirements.txt file:
+```txt
+opentelemetry-api 
+opentelemetry-sdk 
+opentelemetry-exporter-otlp-proto-http 
+opentelemetry-instrumentation-flask 
+opentelemetry-instrumentation-requests
+```
+#### 1.2) Install the OTEL SDK and the OpenTelemetry Honeycomb exporter using pip:
+```txt
+pip install -r requirements.txt
+```
+#### 1.3) Initialize the OTEL SDK and the Honeycomb exporter in our Flask backend (app.py) and instrument it by adding tracing using the @tracer.span() decorator provided by the OpenTelemetry SDK:
+```py
+#Honeycomb---
+#Import libraries
+
+from opentelemetry import trace
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+#Honeycomb---
+#Initialize tracing and an exporter that can send data to Honeycomb
+provider = TracerProvider()
+processor = BatchSpanProcessor(OTLPSpanExporter())
+provider.add_span_processor(processor)
+
+#Add tracing for instrumentation
+trace.set_tracer_provider(provider)
+tracer = trace.get_tracer(__name__)
+
+#Honeycomb---
+#Initialize automatic instrumentation with Flask
+FlaskInstrumentor().instrument_app(app)
+RequestsInstrumentor().instrument()
+```
+#### 1.4) Configure the variables on docker-compose.yml:
+```yml
+OTEL_SERVICE_NAME: "backend-flask"
+OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
+OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
+```
+#### 1.5) Export and persist the environmental variables of your honeycomb account:
+
+HONEYCOMB
+
+#### 1.6) Run queries to explore traces
+
+![image](https://user-images.githubusercontent.com/85003009/222978324-068ca95c-54cf-419a-b245-b8a662070423.png)
+
+![image](https://user-images.githubusercontent.com/85003009/222978407-a7c27003-2af1-4efc-b291-16d2b8aef98a.png)
+
+
+## 2) XRay
+
+To instrument AWS X-Ray into our Flask application using the X-Ray daemon, we will use the AWS X-Ray SDK for Python along with the xray_recorder middleware for Flask:
+
+#### 2.1) Add the AWS X-Ray SDK sources for provitioning it with python on our backend-flask/requirements.txt file:
+```txt
+aws-xray-sdk
+```
+#### 2.2) Install the AWS X-Ray SDK using pip:
+```txt
+pip install -r requirements.txt
+```
+#### 2.3) Configure the AWS X-Ray SDK in our Flask backend (app.py) by importing it and calling the configure() method with the daemon_address argument set to the address of the X-Ray daemon:
+```py
+#X-RAY-------------------
+# Importing AWS X-Ray libraries
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+
+#X-RAY-------------------
+# Configure the AWS X-Ray SDK
+xray_url = os.getenv("AWS_XRAY_URL")
+xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
+
+#X-RAY-------------------
+# Calling X-Ray Middleware class
+XRayMiddleware(app, xray_recorder)
+```
+
+#### 2.4) Setup AWS X-Ray Resources, we created a JSON file (aws/json/xray.json) with parameters for the sampling rule
+```json
+{
+  "SamplingRule": {
+      "RuleName": "Cruddur",
+      "ResourceARN": "*",
+      "Priority": 9000,
+      "FixedRate": 0.1,
+      "ReservoirSize": 5,
+      "ServiceName": "backend-flask",
+      "ServiceType": "*",
+      "Host": "*",
+      "HTTPMethod": "*",
+      "URLPath": "*",
+      "Version": 1
+  }
+}
+```
+#### 2.5) Create an Xray Group on AWS for storing and receiving the data:
+```aws
+aws xray create-group \
+   --group-name "Cruddur" \
+   --filter-expression "service(\"backend-flask\")"
+```
+![image](https://user-images.githubusercontent.com/85003009/222979666-d0cd9f5e-6037-4785-a37c-df297b2fa33e.png)
+
+#### 2.6) Using the JSON file we've created, we generate the rule on AWS X-Ray:
+```aws
+aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json
+```
+![image](https://user-images.githubusercontent.com/85003009/222979773-c78f50d6-0ad2-4340-9bf8-545363784062.png)
+
+#### 2.7) Install X-Ray Daemon and add it to docker-compose.yml:
+
+Downloading aws S-Ray daemon:
+```bash
+ wget https://s3.us-east-2.amazonaws.com/aws-xray-assets.us-east-2/xray-daemon/aws-xray-daemon-3.x.deb
+ sudo dpkg -i **.deb
+```
+Docker-Compose configuration:
+```yml
+#X-Ray--- 
+#Environmental variables
+   AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
+   AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
+#X-Ray--- 
+#Daemon configuration
+  xray-daemon:
+    image: "amazon/aws-xray-daemon"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "ca-central-1"
+    command:
+      - "xray -o -b xray-daemon:2000"
+    ports:
+      - 2000:2000/udp
+```
+#### 2.8) Add @xray_recorder.capture decorator and subsegment
+
+by adding tje decorator to a function or block of code, it creates a new AWS X-Ray segment for that code block, and records timing and metadata information about it. The segment will appear in the AWS X-Ray console as a node in the service map or trace details view, allowing you to visualize and analyze the performance of that code block.
+
+For configuring the decorator, we added the following code to backend-flask/app.py:
+```py
+#Xray
+@xray_recorder.capture('activites_home')
+...
+#xray
+@xray_recorder.capture('activites_users')
+...
+#xray
+@xray_recorder.capture('activites_show')
+
+```
+
+For adding the recoderder subsegment, we added the following lines to the user_activites service:
+```py
+subsegment = xray_recorder.begin_segment('mockdata')
+      dict = {
+        "now": now.isoformat(),
+        "results-size": len(model['data'])
+      }
+      subsegment.put_metadata('key',dict,'namespace')
+      xray_recorder.end_subsegment()
+```
+
+#### 2.9) Send data back to X-Ray API and observe X-Ray traces within the AWS Console
+
+![image](https://user-images.githubusercontent.com/85003009/222981181-1a6dfd1a-4fcf-46fb-a91f-382a160db440.png)
+
+![image](https://user-images.githubusercontent.com/85003009/222981149-ab00c22c-05c0-4ed1-9296-000399a818ba.png)
+
+
+
+Integrate Rollbar for Error Logging
+Trigger an error an observe an error with Rollbar
+Install WatchTower and write a custom logger to send application log data to - CloudWatch Log group
+
+## Summary
+- [x] Watched all the instructional videos
+- [x] Instrument our backend flask application to use Open Telemetry with Honeycomb
+- [x] Run queries to explore traces within Honeycomb.io
+- [x] Instrument AWS X-Ray into backend flask application
+- [x] Configure and provision X-Ray daemon within docker-compose and send data back to X-Ray API
+- [x] Observe X-Ray traces within the AWS Console
+- [ ] Integrate Rollbar for Error Logging
+- [ ] Trigger an error an observe an error with Rollbar
+- [ ] Install WatchTower and write a custom logger to send application log data to - CloudWatch Log group
+
+
+> Logical Diagram:
