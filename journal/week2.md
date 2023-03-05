@@ -243,13 +243,112 @@ on app.py:
 def data_home():
   data = HomeActivities.run(logger=LOGGER)
 ```
-#### 2.9) Observe the CloudWatch Logs within the AWS Console
+#### 3.6) Observe the CloudWatch Logs within the AWS Console
 ![image](https://user-images.githubusercontent.com/85003009/222983372-0f38b1c9-239d-4757-ab80-8f53873ba036.png)
 
 
-Integrate Rollbar for Error Logging
-Trigger an error an observe an error with Rollbar
-Install WatchTower and write a custom logger to send application log data to - CloudWatch Log group
+## 4) Rollbar
+
+#### 3.1) Add the rollbar sources for provitioning it with python on our backend-flask/requirements.txt file:
+```txt
+blinker
+rollbar
+```
+#### 3.2) Install rollbar using pip:
+```txt
+pip install -r requirements.txt
+```
+#### 3.3) Configuring error logging Rollbar on Flask backend (app.py)
+
+```py
+#Rollbar--------------
+# Importing Rollbar logs libraries
+import rollbar
+import rollbar.contrib.flask
+#Rollbar--------------
+#Integrate error logging
+from flask import got_request_exception
+rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+@app.before_first_request
+def init_rollbar():
+    """init rollbar module"""
+    rollbar.init(
+        # access token
+        rollbar_access_token,
+        # environment name
+        'production',
+        # server root directory, makes tracebacks prettier
+        root=os.path.dirname(os.path.realpath(__file__)),
+        # flask already sets up logging
+        allow_logging_basic_config=False)
+    # send exceptions from `app` to rollbar, using flask's signal system.
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+```
+
+add and endpoint for testing on app.py:
+```py
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
+```
+#### 3.3) Observe how Rollbar handle error trigering:
+
+on home_activites.py we removed a part of the code to see how are errors logged on Rollbar:
+
+![image](https://user-images.githubusercontent.com/85003009/222991763-0462d9cb-293c-4f69-8cb9-3d55755c668f.png)
+
+We can see that errors are being logged:
+
+![image](https://user-images.githubusercontent.com/85003009/222991796-308f8fd8-a0c6-4b0f-a9db-29b9b003eddc.png)
+
+We got a mail notification with the full error as well:
+
+```mail
+Project:	FirstProject
+Environment:	production
+Code Version:	unspecified
+Host:	0fb6a1c8d150
+Timestamp:	2023-03-05 03:12 pm
+A new item has occurred for the first time. View full details of the item at: https://rollbar.com/rodrorivero/FirstProject/items/2/.
+View the occurrence that triggered this notification at: https://rollbar.com/rodrorivero/FirstProject/items/2/occurrences/316299134253/
+
+Message
+TypeError: The view function for 'data_home' did not return a valid response. The function either returned None or ended without a return statement.
+
+Traceback
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/flask/app.py", line 2528, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.10/site-packages/flask/app.py", line 1826, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/usr/local/lib/python3.10/site-packages/flask/app.py", line 1845, in finalize_request
+    response = self.make_response(rv)
+  File "/usr/local/lib/python3.10/site-packages/flask/app.py", line 2137, in make_response
+    raise TypeError(
+TypeError: The view function for 'data_home' did not return a valid response. The function either returned None or ended without a return statement.
+Params
+context	/api/activities/home
+environment	production
+framework	flask
+language	python 3.10.10
+level	error
+notifier.name	pyrollbar
+notifier.version	0.16.3
+server.argv	["/usr/local/lib/python3.10/site-packages/flask/__main__.py", "run", "--host=0.0.0.0", "--port=4567"]
+server.host	0fb6a1c8d150
+server.pid	212
+server.root	/backend-flask
+timestamp	1678057979 - 2023-03-05 03:12:59 pm
+uuid	21df88b1-2f22-442f-ade5-17c3757eab42
+Replay
+Not a replayable item since it doesn't have request params, is a POST, or is a client-side error.
+Report grouping issue
+If you think there is a problem with grouping this item, you can report it with one click.
+
+https://rollbar.com/rodrorivero/FirstProject/items/2/?utm_campaign=new_item&utm_medium=email&utm_source=rollbar-notification&utm_content=control#reportissue
+```
+
 
 ## Summary
 - [x] Watched all the instructional videos
@@ -258,9 +357,9 @@ Install WatchTower and write a custom logger to send application log data to - C
 - [x] Instrument AWS X-Ray into backend flask application
 - [x] Configure and provision X-Ray daemon within docker-compose and send data back to X-Ray API
 - [x] Observe X-Ray traces within the AWS Console
-- [ ] Integrate Rollbar for Error Logging
-- [ ] Trigger an error an observe an error with Rollbar
-- [ ] Install WatchTower and write a custom logger to send application log data to - CloudWatch Log group
+- [x] Integrate Rollbar for Error Logging
+- [x] Trigger an error an observe an error with Rollbar
+- [X] Install WatchTower and write a custom logger to send application log data to - CloudWatch Log group
 
 
-> Logical Diagram:
+
