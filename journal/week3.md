@@ -41,7 +41,7 @@ add the environmental variables to docker-compose:
 ```yml
 REACT_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
 REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
-REACT_APP_AWS_USER_POOLS_ID: "ca-central-1_GkLzrcz6J"
+REACT_APP_AWS_USER_POOLS_ID: "ca-central-*******"
 REACT_APP_CLIENT_ID: "******"
 ```
 
@@ -69,7 +69,7 @@ Amplify.configure({
   }
 });
 ```
-Then we add the authentication module with cognito to `HomeFeedPage.js`
+Then add the authentication module with cognito to `HomeFeedPage.js`
 
 ```js
 import { Auth } from 'aws-amplify';
@@ -104,7 +104,7 @@ React.useEffect(()=>{
 }, [])
 ```
 
-After that we update `ProfileInfo.js` in order to get the user
+After that update `ProfileInfo.js` in order to get the user
 
 ```js
 import { Auth } from 'aws-amplify';
@@ -119,7 +119,7 @@ const signOut = async () => {
 }
 ```
 
-We add the authentication to signin page `frontend-react-js/src/pages/SigninPage.js`:
+Add the authentication to signin page `frontend-react-js/src/pages/SigninPage.js`:
 
 ```js
 import { Auth } from 'aws-amplify';
@@ -153,6 +153,7 @@ if (cognitoErrors){
 // just before submit component
 {errors}
 ```
+
 
 
 #### 1.2) 
