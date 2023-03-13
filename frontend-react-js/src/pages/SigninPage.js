@@ -13,6 +13,7 @@ export default function SigninPage() {
   const [errors, setErrors] = React.useState('');
 
   const onsubmit = async (event) => {
+    //const [erra, setErra] = user.signInUserSession.accessToken.jwtToken;
     setErrors('')
     event.preventDefault();
     Auth.signIn(email, password)
