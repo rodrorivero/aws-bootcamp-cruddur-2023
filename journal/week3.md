@@ -11,7 +11,7 @@
 ```  
 # Week 3 — Decentralized Authentication
 
-## 1) Cognito
+### 1) Cognito
 
 Amazon Cognito is a user authentication and management service that simplifies the process of building secure and scalable applications that enables developers to add user sign-up, sign-in, and access control to their applications. It provides a secure user directory with features such as multi-factor authentication, email and SMS verification, social identity providers, and password policies.
 
@@ -29,8 +29,9 @@ And then create a user for login:
 #### 1.2) Amplify 
 
 AWS Amplify simplifies the process of integrating Amazon Cognito into our web application. To use it, we will configure our Amazon Cognito user pool, install the Amplify CLI, configure the Amplify application to use Amazon Cognito, add user authentication using pre-built UI components and APIs, and deploy your application to the cloud. 
-
 First we install the amplify package in the front end directory
+
+### 2) Front End implementation
 
 ```sh
 npm i aws-amplify --save
@@ -127,7 +128,7 @@ import { Auth } from 'aws-amplify';
 const [cognitoErrors, setCognitoErrors] = React.useState('');
 
 const onsubmit = async (event) => {
-  setCognitoErrors('')
+  setErrors('')
   event.preventDefault();
   try {
     Auth.signIn(username, password)
@@ -140,63 +141,20 @@ const onsubmit = async (event) => {
     if (error.code == 'UserNotConfirmedException') {
       window.location.href = "/confirm"
     }
-    setCognitoErrors(error.message)
+    setErrors(error.message)
   }
   return false
 }
 
 let errors;
 if (cognitoErrors){
-  errors = <div className='errors'>{cognitoErrors}</div>;
+  errors = <div className='errors'>{errors}</div>;
 }
 
 // just before submit component
 {errors}
 ```
-
-
-
-
-#### 1.2) 
-```txt
-
-```
-#### 1.3) 
-#### 1.4) 
-#### 1.5) 
-## 2) 
-#### 2.1) 
-#### 2.2) 
-#### 2.3) 
-#### 2.4) 
-#### 2.5)
-#### 2.7) 
-#### 2.8) 
-#### 2.9) 
-## 3) 
-#### 3.1) 
-#### 3.2) 
-#### 3.3) 
-#### 3.4)
-#### 3.5)
-#### 3.6) 
-## 4)
-#### 4.1) 
-#### 4.2) 
-#### 4.3) 
-#### 4.4) 
-
-
-
-
-
-
-
-## Signin Page
-
-
-## Signup Page
-
+Add the authentication to signup page `frontend-react-js/src/pages/SignupPage.js`:
 ```js
 import { Auth } from 'aws-amplify';
 
@@ -204,7 +162,7 @@ const [cognitoErrors, setCognitoErrors] = React.useState('');
 
 const onsubmit = async (event) => {
   event.preventDefault();
-  setCognitoErrors('')
+  setErrors('')
   try {
       const { user } = await Auth.signUp({
         username: email,
@@ -222,25 +180,23 @@ const onsubmit = async (event) => {
       window.location.href = `/confirm?email=${email}`
   } catch (error) {
       console.log(error);
-      setCognitoErrors(error.message)
+      setErrors(error.message)
   }
   return false
 }
 
-let errors;
-if (cognitoErrors){
-  errors = <div className='errors'>{cognitoErrors}</div>;
+let el_errors;
+if (errors){
+  el_errors = <div className='errors'>{errors}</div>;
 }
 
-//before submit component
-{errors}
 ```
-
-## Confirmation Page
+Configurate the confirmation page for singup `frontend-react-js/src/pages/ConfirmationPage.js`:
 
 ```js
+import { Auth } from 'aws-amplify';
 const resend_code = async (event) => {
-  setCognitoErrors('')
+  setErrors('')
   try {
     await Auth.resendSignUp(email);
     console.log('code resent successfully');
@@ -251,34 +207,32 @@ const resend_code = async (event) => {
     // for this to be an okay match?
     console.log(err)
     if (err.message == 'Username cannot be empty'){
-      setCognitoErrors("You need to provide an email in order to send Resend Activiation Code")   
+      setErrors("You need to provide an email in order to send Resend Activiation Code")   
     } else if (err.message == "Username/client id combination not found."){
-      setCognitoErrors("Email is invalid or cannot be found.")   
+      setErrors("Email is invalid or cannot be found.")   
     }
   }
 }
 
 const onsubmit = async (event) => {
   event.preventDefault();
-  setCognitoErrors('')
+  setErrors('')
   try {
     await Auth.confirmSignUp(email, code);
     window.location.href = "/"
   } catch (error) {
-    setCognitoErrors(error.message)
+    setErrors(error.message)
   }
   return false
 }
 ```
-
-## Recovery Page
-
+Configurate the recovery page for password recovery `frontend-react-js/src/pages/RecoverPage.js`:
 ```js
 import { Auth } from 'aws-amplify';
 
 const onsubmit_send_code = async (event) => {
   event.preventDefault();
-  setCognitoErrors('')
+  setErrors('')
   Auth.forgotPassword(username)
   .then((data) => setFormState('confirm_code') )
   .catch((err) => setCognitoErrors(err.message) );
@@ -287,13 +241,13 @@ const onsubmit_send_code = async (event) => {
 
 const onsubmit_confirm_code = async (event) => {
   event.preventDefault();
-  setCognitoErrors('')
+  setErrors('')
   if (password == passwordAgain){
     Auth.forgotPasswordSubmit(username, code, password)
     .then((data) => setFormState('success'))
     .catch((err) => setCognitoErrors(err.message) );
   } else {
-    setCognitoErrors('Passwords do not match')
+    setErrors('Passwords do not match')
   }
   return false
 }
@@ -319,6 +273,19 @@ cors = CORS(
   methods="OPTIONS,GET,HEAD,POST"
 )
 ```
+Then we test the user creation, password reset and login:
+
+![2023-03-12 22_11_23-cruddur-user-pool - User pools](https://user-images.githubusercontent.com/85003009/226799222-316aadbd-dbc2-412c-a071-c5625b0bdec0.png)
+
+User created successuflly in cognito:
+
+![2023-03-12 22_07_35-Cruddur](https://user-images.githubusercontent.com/85003009/226799247-bf34424d-acd7-432f-867d-bec8d1af8fb9.png)
+
+
+### 3) Back End implementation
+
+
+
 
 
 
