@@ -19,7 +19,7 @@ from services.show_activity import *
 
 #Congito-------------
 
-from lib.cognito_token_verifivation import CognitoTokenVerification
+from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
 
 
 #Honeycomb-------------
@@ -184,19 +184,20 @@ def data_create_message():
 def data_home():
   #CloudWatch logs
   #data = HomeActivities.run(logger=LOGGER)
-  access_token = CognitoJwtToken.extract_access_token(request.headers)
+  access_token = extract_access_token(request.headers)
   try:
-    self.token_service.verify(access_token)
-    self.claims = self.token_service.claims
-    g.cognito_claims = self.claims
-  except TokenVerifyError as e:
-    _ = request.data
-    abort(make_response(jsonify(message=str(e)), 401))
-
-
-    claims = aws_auth.claims
+    claims = cognito_jwt_token.verify(access_token)
+    app.logger.debug('authenticated')
     app.logger.debug('claims')
     app.logger.debug(claims)
+    app.logger.debug(claims['username'])
+    data = HomeActivities.run(conginto_user_id=claims['username'])
+    # authenticated request
+  except TokenVerifyError as e:
+    _ = request.data
+    # unauthenticated request
+    app.logger.debug('unauthenticated')
+
     data = HomeActivities.run()
 
   return data, 200
