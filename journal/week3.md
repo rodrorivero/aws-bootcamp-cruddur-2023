@@ -284,8 +284,45 @@ User created successuflly in cognito:
 
 ### 3) Back End implementation
 
+Create a Library called: `backend-flask/lib/cognito_jwt_token.py`extracterd from: https://github.com/cgauge/Flask-AWSCognito/blob/master/flask_awscognito/plugin.py
 
+Then adapt the variables into our `backend-flask/app.py` file:
 
+```py
+#Congito-------------
+
+from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
+
+cognito_jwt_token = CognitoJwtToken(
+  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"),
+  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
+  region= os.getenv("AWS_DEFAULT_REGION")
+)
+
+@app.route("/api/activities/home", methods=['GET'])
+#Xray
+@xray_recorder.capture('activites_home')
+def data_home():
+  #CloudWatch logs
+  #data = HomeActivities.run(logger=LOGGER)
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    app.logger.debug('authenticated')
+    app.logger.debug('claims')
+    app.logger.debug(claims)
+    app.logger.debug(claims['username'])
+    data = HomeActivities.run(conginto_user_id=claims['username'])
+    # authenticated request
+  except TokenVerifyError as e:
+    _ = request.data
+    # unauthenticated request
+    app.logger.debug('unauthenticated')
+
+    data = HomeActivities.run()
+
+  return data, 200
+```
 
 
 
