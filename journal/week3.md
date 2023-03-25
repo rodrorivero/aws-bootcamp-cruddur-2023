@@ -325,6 +325,51 @@ def data_home():
 ```
 
 
+After that we test the authenticated specific user cruds:
+
+```py
+On home_activities.py:
+
+class HomeActivities:
+  #CloudWatch logs
+  #def run(logger):
+
+  def run(conginto_user_id=None):
+
+...
+    if conginto_user_id != None:
+      extra_crud={
+        'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
+        'handle':  'Lore',
+        'message': 'My dear brother, I think the humans are the problem',
+        'created_at': (now - timedelta(hours=1)).isoformat(),
+        'expires_at': (now + timedelta(hours=12)).isoformat(),
+        'likes_count': 420,
+        'replies': []
+      }
+      results.insert(0,extra_crud)
+  ```
+
+![image](https://user-images.githubusercontent.com/85003009/227738011-e3d1eda3-89ef-4546-9e0c-df6eff9030ce.png)
+
+
+And not whowing it when logoff:
+
+On ProfileInfo.js:
+
+```js
+  const signOut = async () => {
+    try {
+        await Auth.signOut({ global: true });
+        window.location.href = "/"
+        localStorage.removeItem("access_token")
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+  }
+```
+
+![image](https://user-images.githubusercontent.com/85003009/227738019-86383630-81bd-4e6a-84a5-04d47d40778e.png)
 
 ## Summary
 - [x] Watched all the instructional videos
