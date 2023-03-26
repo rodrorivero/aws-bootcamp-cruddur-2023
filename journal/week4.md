@@ -140,6 +140,12 @@ VALUES
   )
 ```
 
+then we test the connection and verify the data creation:
+
+![image](https://user-images.githubusercontent.com/85003009/227758052-36fced7d-aa33-4b5e-ac17-b4e44c585fb8.png)
+
+
+
 #### 1.3) 
 #### 1.4) 
 #### 1.5) 
