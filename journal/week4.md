@@ -76,13 +76,23 @@ fi
 psql $URL cruddur < $schema_path
 ```
 Script for droping the database db-drop:
+
+>Here I had to add some code to kill all sesions because sometimes it gave me some errors:
+
 ```bash
 #! /usr/bin/bash
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
 LABEL="db-drop"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
 NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<<"$CONNECTION_URL")
+
+psql $NO_DB_CONNECTION_URL -c "
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE pg_stat_activity.datname = 'cruddur';"
+
 psql $NO_DB_CONNECTION_URL -c "DROP database cruddur;"
 ```
 Script for creating the database, db-create:
@@ -145,8 +155,86 @@ then we test the connection and verify the data creation:
 ![image](https://user-images.githubusercontent.com/85003009/227758052-36fced7d-aa33-4b5e-ac17-b4e44c585fb8.png)
 
 
+#### 1.3) Install Psycopg - PostgreSQL database adapter for python
 
-#### 1.3) 
+Add the postgress driver libraries to requirements.txt
+
+```txt
+psycopg[binary]
+psycopg[pool]
+```
+
+Install them:
+
+```bash
+pip install -r requirements.txt
+```
+Then we make sure to pass the EV trough docker compose:
+
+```yml
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      CONNECTION_URL: "${CONNECTION_URL"
+```
+
+On home_activites.py we import the just created library:
+
+```py
+from lib.db import pool
+```
+
+db-connect:
+```bash
+#! /usr/bin/bash
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="db-connect"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+if [ "$1" = "prod" ]; then
+  echo "Running in production mode"
+  URL=$PROD_CONNECTION_URL
+else
+  echo "Running in development mode"
+  URL=$CONNECTION_URL
+fi
+
+psql $URL
+```
+
+
+export the ENV
+
+```bash
+export DB_SG_ID="sg-0f746e2d320a853c8"
+gp env DB_SG_ID="sg-0f746e2d320a853c8"
+export DB_SG_RULE_ID="sgr-093953b3b829d9584"
+gp env DB_SG_RULE_ID="sgr-093953b3b829d9584"
+```
+
+rds-update-sg-rule
+
+```bash
+#! /usr/bin/bash
+GREEN='\033[0;32m'
+NO_COLOR='\033[0m'
+LABEL="rds-update-sg-rule"
+printf "${GREEN}== ${LABEL}${NO_COLOR}\n"
+
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+    --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=${GITPOD_IP}/32}"
+```
+gitpod.yml
+```yml
+  command:
+    export GITPOD_IP=$(curl ifconfig.me)
+    source "$THEIA_WORKSPACE_ROOT/backend-flask/rds-update-sg-rule"
+``` 
+    
+
 #### 1.4) 
 #### 1.5) 
 ## 2) 
