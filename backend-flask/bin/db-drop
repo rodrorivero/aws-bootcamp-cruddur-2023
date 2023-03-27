@@ -1,8 +1,14 @@
 #! /usr/bin/bash
-CYAN='\033[1;36m'
+RED='\033[0;31m'
 NO_COLOR='\033[0m'
 LABEL="db-drop"
-printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+printf "${RED}== ${LABEL}${NO_COLOR}\n"
 
 NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<<"$CONNECTION_URL")
+
+psql $NO_DB_CONNECTION_URL -c "
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE pg_stat_activity.datname = 'cruddur';"
+
 psql $NO_DB_CONNECTION_URL -c "DROP database cruddur;"
