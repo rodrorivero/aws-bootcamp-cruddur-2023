@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from opentelemetry import trace
-from lib.db import db, pool, query_wrap_array
+from lib.db import db
 import logging
 
 
