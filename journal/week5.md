@@ -9,4 +9,12 @@
  :5BBGGGBBBBBBB^ JBGGGB? :GGGGGP.   JBBGGGBBGGGBB5.  PGGGGGGBBBGBBB5:  GGGGGGBBBBGBBB5:  .5BBGGGBBGGGBB?  :BGGGGG. JBGGGG7     
    ^?5GGGGGGGPJ: JGGGGG?  ^GGGGGP.   :?5GGGGGGPJ^    5GGGGGGGGGPY?:    PGGGGGGGGGPY7:      ~Y5GGGGGP5?:   .GGGGGG.  5GGGGG7       
                                                                                                                                   
-```  # Week 5 — DynamoDB and Serverless Caching
+```  
+# Week 5 — DynamoDB and Serverless Caching
+
+## 1) 
+#### 1.1)
+
+## Summary
+- [x] 
+- [x] 
