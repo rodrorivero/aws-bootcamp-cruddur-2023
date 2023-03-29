@@ -14,14 +14,17 @@
 ## 1) Postgres
 
 create a local database called cruddr:
+
 ```psql
 CREATE database cruddur;
 ```
 create a sql file called schema.sql for executing the plsql queries:
+
 ```psql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ```
 create a connection string to database cruddr on Posgres and store it as environmental variable:
+
 ```bash
 gp env CONNECTION_URL="postgresql://postgres:*****@127.0.0.1:5433/cruddur"
 ```
@@ -30,6 +33,7 @@ gp env CONNECTION_URL="postgresql://postgres:*****@127.0.0.1:5433/cruddur"
 
 In order to make easier the handling of creation, connection and seeding, we created the following files:
 Script for connect to the database,  db-connect:
+
 ```bash
 #! /usr/bin/bash
 CYAN='\033[1;36m'
@@ -39,6 +43,7 @@ printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 psql $CONNECTION_URL
 ```
 Script for calling the database's mock data creation, db-seed:
+
 ```bash
 #! /usr/bin/bash
 CYAN='\033[1;36m'
@@ -59,6 +64,7 @@ fi
 psql $URL cruddur < $seed_path
 ```
 Script for create the database's schema, db-schema-load:
+
 ```bash
 #! /usr/bin/bash
 CYAN='\033[1;36m'
@@ -96,6 +102,7 @@ WHERE pg_stat_activity.datname = 'cruddur';"
 psql $NO_DB_CONNECTION_URL -c "DROP database cruddur;"
 ```
 Script for creating the database, db-create:
+
 ```bash
 #! /usr/bin/bash
 CYAN='\033[1;36m'
@@ -107,7 +114,8 @@ psql $NO_DB_CONNECTION_URL -c "CREATE database cruddur;"
 ```
 #### 1.2) create the PSQL queries for Postgres:
 
-In order to create the tables, we configure schema.sql
+In order to create the tables, we configure schema.sql:
+
 ```psql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS public.users;
@@ -134,6 +142,7 @@ CREATE TABLE public.activities (
 ```
 
 for automatic insertion of mock data we create the see.sql file:
+
 ```psql
 -- this file was manually created
 INSERT INTO public.users (display_name, handle, cognito_user_id)
@@ -157,26 +166,24 @@ then we test the connection and verify the data creation:
 
 #### 1.3) Install Psycopg - PostgreSQL database adapter for python
 
-Add the postgress driver libraries to requirements.txt
+In order to configure the communication between the backend and the database we add the postgress driver libraries to requirements.txt
 
 ```txt
 psycopg[binary]
 psycopg[pool]
 ```
 
-Install them:
-
 ```bash
 pip install -r requirements.txt
 ```
-Then we make sure to pass the EV trough docker compose:
+Then we make sure to pass the EV for connection to the database through docker compose:
 
 ```yml
 version: "3.8"
 services:
   backend-flask:
     environment:
-      CONNECTION_URL: "${CONNECTION_URL"
+      CONNECTION_URL: "${CONNECTION_URL}"
 ```
 
 On home_activites.py we import the just created library:
@@ -185,7 +192,8 @@ On home_activites.py we import the just created library:
 from lib.db import pool
 ```
 
-db-connect:
+Create the script to connect to dabase, db-connect:
+
 ```bash
 #! /usr/bin/bash
 CYAN='\033[1;36m'
@@ -205,7 +213,7 @@ psql $URL
 ```
 
 
-export the ENV
+Then create a security group, to allow the communication between Lambda and Postgres, and for making the rule dynamic we export the ENV
 
 ```bash
 export DB_SG_ID="sg-0f746e2d320a853c8"
@@ -214,7 +222,7 @@ export DB_SG_RULE_ID="sgr-093953b3b829d9584"
 gp env DB_SG_RULE_ID="sgr-093953b3b829d9584"
 ```
 
-rds-update-sg-rule
+Create the dynamic rule for updating the security group, rds-update-sg-rule
 
 ```bash
 #! /usr/bin/bash
@@ -227,7 +235,8 @@ aws ec2 modify-security-group-rules \
     --group-id $DB_SG_ID \
     --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=${GITPOD_IP}/32}"
 ```
-gitpod.yml
+Program it for automatic execution on gitpod.yml
+
 ```yml
   command:
     export GITPOD_IP=$(curl ifconfig.me)
@@ -237,7 +246,7 @@ gitpod.yml
 
 #### 1.4) Cognito Post Confirmation Lambda
 
-We create a lambda function for storing the authentication data from cognito into our postgres database.
+We create a Lambda function for storing the authentication data from cognito into our postgres database.
 
 ```py
 import json
@@ -284,6 +293,8 @@ def lambda_handler(event, context):
 ```
 
 ## 2) Activities creation
+
+Create a library for activity creations, this will store our crudds on the database and associate them with the user:
 
 `create_activity.py`
 ```py
@@ -356,6 +367,8 @@ class CreateActivity:
     })
 ```
 
+Then create the queries for managing the activities:
+
 `create.sql`
 ```sql
 INSERT INTO public.activities (
@@ -406,6 +419,8 @@ INNER JOIN public.users ON users.uuid = activities.user_uuid
 WHERE 
   activities.uuid = %(uuid)s
 ```
+
+Update the database library for executing the queries
 
 `db.py`
 ```py
@@ -525,6 +540,7 @@ class Db:
 db = Db()
 ```
 
+Update the home activities page for executing the queries:
 
 `home_activities.py`
 ```py
@@ -544,35 +560,9 @@ class HomeActivities:
 
 ```
 
-#### 2.1) 
-#### 2.2) 
-#### 2.3) 
-#### 2.4) 
-#### 2.5)
-#### 2.7) 
-#### 2.8) 
-#### 2.9) 
-## 3) 
-#### 3.1) 
-#### 3.2) 
-#### 3.3) 
-#### 3.4)
-#### 3.5)
-#### 3.6) 
-## 4)
-#### 4.1) 
-#### 4.2) 
-#### 4.3) 
-#### 4.4) 
+>I encountered errores whit the handle, and had to update the hardcoded value to my user:
 
-Create RDS Postgres Instance
-Create Schema for Postgres
-Watched Ashish's Week 4 - Security Considerations
-Bash scripting for common database actions
-Install Postgres driver in backend application
-Connect Gitpod to RDS instance
-Create AWS Cognito trigger to insert user into database	
-Create new activities with a database insert
+![image](https://user-images.githubusercontent.com/85003009/228405849-7889241c-520e-4bd6-b86c-b077adbb2ced.png)
 
 
 ## Summary
@@ -585,16 +575,4 @@ Create new activities with a database insert
 - [x] Connect Gitpod to RDS instance
 - [x] Create AWS Cognito trigger to insert user into database	
 - [x] Create new activities with a database insert
-- [ ] Provision an RDS instance
-- [ ]Temporarily stop an RDS instance
-- [ ]Remotely connect to RDS instance
-- [ ]Programmatically update a security group rule
-- [ ]Write several bash scripts for database operations
-- [ ]Operate common SQL commands
-- [ ]Create a schema SQL file by hand
-- [ ]Work with UUIDs and PSQL extensions
-- [ ]Implement a postgres client for python using a connection pool
-- [ ]Troubleshoot common SQL errors
-- [ ]Implement a Lambda that runs in a VPC and commits code to RDS
-- [ ]Work with PSQL json functions to directly return json from the database
-- [ ]Correctly sanitize parameters passed to SQL to execute
+
