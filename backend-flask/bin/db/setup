@@ -1,4 +1,5 @@
 #! /usr/bin/bash
+set -e # stop if it fails at any point
 PURPLE='\033[0;35m'
 NO_COLOR='\033[0m'
 LABEL="sessions"
