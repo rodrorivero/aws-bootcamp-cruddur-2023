@@ -11,4 +11,4 @@ SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
 WHERE pg_stat_activity.datname = 'cruddur';"
 
-psql $NO_DB_CONNECTION_URL -c "DROP database cruddur;"
+psql $NO_DB_CONNECTION_URL -c "DROP database IF EXISTS cruddur;"
