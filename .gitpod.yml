@@ -13,7 +13,10 @@ tasks:
   command: |
     export GITPOD_IP=$(curl ifconfig.me)
     source  "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"
-
+- name : Flask
+  command : |
+    cd backend-flask
+    pip install -r requirements.txt
 - name: aws-cli
   env:
    AWS_CLI_AUTO_PROMPT: on-partial
