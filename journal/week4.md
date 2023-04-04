@@ -147,13 +147,13 @@ for automatic insertion of mock data we create the see.sql file:
 -- this file was manually created
 INSERT INTO public.users (display_name, handle, cognito_user_id)
 VALUES
-  ('Andrew Brown', 'andrewbrown' ,'MOCK'),
+  ('Carlos Rivero', 'carlos_r' ,'MOCK'),
   ('Andrew Bayko', 'bayko' ,'MOCK');
 
 INSERT INTO public.activities (user_uuid, message, expires_at)
 VALUES
   (
-    (SELECT uuid from public.users WHERE users.handle = 'andrewbrown' LIMIT 1),
+    (SELECT uuid from public.users WHERE users.handle = 'carlos_r' LIMIT 1),
     'This was imported as seed data!',
     current_timestamp + interval '10 day'
   )
@@ -343,7 +343,7 @@ class CreateActivity:
     else:
       model['data'] = {
         'uuid': uuid.uuid4(),
-        'display_name': 'Andrew Brown',
+        'display_name': 'Carlos Rivero',
         'handle':  user_handle,
         'message': message,
         'created_at': now.isoformat(),
