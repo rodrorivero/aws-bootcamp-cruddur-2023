@@ -148,7 +148,7 @@ for automatic insertion of mock data we create the see.sql file:
 INSERT INTO public.users (display_name, handle, cognito_user_id)
 VALUES
   ('Carlos Rivero', 'carlos_r' ,'MOCK'),
-  ('Andrew Bayko', 'bayko' ,'MOCK');
+  ('Rodrigo Rivero', 'rodrigorivero' ,'MOCK');
 
 INSERT INTO public.activities (user_uuid, message, expires_at)
 VALUES

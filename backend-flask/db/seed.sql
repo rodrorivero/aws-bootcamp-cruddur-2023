@@ -2,7 +2,7 @@
 INSERT INTO public.users (display_name, email, handle, cognito_user_id)
 VALUES
   ('Carlos Rivero','rodrorivero@gmail.com', 'carlos_r' ,'c79e4b78-27a2-48c0-86ad-c4c28dd1a0b4'),
-  ('Andrew Bayko','bayko@exampro.com', 'bayko' ,'MOCK');
+  ('Rodrigo Rivero','rodrigorivero@outlook.com', 'rodrigorivero' ,'f3526fb4-a352-4b94-9771-99c61948f908');
 
 SELECT * FROM public.users;
 
