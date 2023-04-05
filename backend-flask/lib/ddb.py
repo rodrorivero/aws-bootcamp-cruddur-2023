@@ -78,6 +78,9 @@ class Ddb:
     created_at = now
     message_uuid = str(uuid.uuid4())
 
+
+
+
     record = {
       'pk':   {'S': f"MSG#{message_group_uuid}"},
       'sk':   {'S': created_at },
@@ -103,6 +106,15 @@ class Ddb:
       'message': message,
       'created_at': created_at
     }
+    print("MESSAGE CONFIGURATION")
+    print(message_group_uuid)
+    print(created_at )
+    print(message)
+    print(message_uuid)
+    print(my_user_uuid)
+    print(my_user_display_name)
+    print(my_user_handle)
+    
   def create_message_group(client, message,my_user_uuid, my_user_display_name, my_user_handle, other_user_uuid, other_user_display_name, other_user_handle):
     print('== create_message_group.1')
     table_name = 'cruddur-messages'

@@ -60,6 +60,8 @@ class CreateMessage:
       ddb = Ddb.client()
 
       if (mode == "update"):
+        print("UPDATING MESSAGE*****")
+        print(message)
         data = Ddb.create_message(
           client=ddb,
           message_group_uuid=message_group_uuid,
@@ -68,6 +70,7 @@ class CreateMessage:
           my_user_display_name=my_user['display_name'],
           my_user_handle=my_user['handle']
         )
+        
       elif (mode == "create"):
         data = Ddb.create_message_group(
           client=ddb,
