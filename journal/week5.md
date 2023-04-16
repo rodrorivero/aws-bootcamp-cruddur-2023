@@ -401,6 +401,16 @@ update db.py
 
 Create the libraries for accessing data patterns:
 
+create a dynamo db table:
+
+![image](https://user-images.githubusercontent.com/85003009/232259852-3bcd121e-f342-4f56-a2b0-cc843d5a0d12.png)
+
+
+
+create a lambda for messaging stream:
+
+![image](https://user-images.githubusercontent.com/85003009/232259811-b95faa8f-a927-4d9b-ba2e-7cbaa9f694b9.png)
+
 
 
 ## Summary
